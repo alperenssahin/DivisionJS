@@ -1,0 +1,26 @@
+const {Division} = require("../build/index")
+
+Division.div()
+Division.div()
+Division.div()
+
+
+
+
+
+/*
+* <template>
+  <div>
+  * <div></div>
+* </template>
+*
+*
+* <script>
+
+* </script>
+*
+* <style scoped>
+
+*
+* </style>
+* */
