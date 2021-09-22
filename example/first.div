@@ -1,8 +1,8 @@
 const {Division} = require("../build/index")
 
-Division.div()
-Division.div()
-Division.div()
+
+Division.div("BUYUK").setClassName("Allah").setInnerText("Buyuk")
+Division.div("GERCEKTEN" + 234232)
 
 
 
