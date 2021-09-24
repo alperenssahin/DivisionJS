@@ -2,7 +2,11 @@
         const {Division} = require("../build/index")
         const fs = require("fs")
         const x  = [
-            Division.div("BUYUK").setClassName("Allah").setInnerText("Buyuk")
+            Division.div({innerText:"Buyuk",id:'allah',class:'boom'}, {
+  'margin':"10px",
+  'padding':"20px",
+  'color':'red'}
+).setInnerText("Buyuk valla")
 ,Division.div("GERCEKTEN" + 234232)
 
 
@@ -14,14 +18,25 @@
         const compiledVue = `
         <template>
             <div>
-                ${x.map(s=>s.generateHTML()).join('')} 
+                ${x.map(s=>s.generateHTML()).join('')}
             </div> 
         </template>
         <script>
+         export default {
+            name: "first.div",
+            data () {
+                return {
+                    ${x.map(s=>s.generateData()).join('')}
+                }
+            },
+            methods: {
+                ${x.map(s=>s.generateScripts()).join('')}
+            }
          
+         }
         </script>
         <style scoped>
-         ${x.map(s=>s.generateStyle()).join('')}
+               ${x.map(s=>s.generateStyle()).join('')}
         </style>
         `
         fs.writeFileSync('/Users/alperensahin/Documents/GitHub/DivisionJS/example/first.div.vue',compiledVue,{encoding:"utf-8"})

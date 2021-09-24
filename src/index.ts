@@ -1,12 +1,20 @@
 import {readFileSync, PathOrFileDescriptor, writeFileSync} from "fs"
+import {Attributes} from "./interfaces/Attributes";
 import * as fs from "fs";
-const { v4:uuidv4 } = require('uuid')
+import { v4 as uuidv4 } from 'uuid';
+/*
+* <div id="" className="attribute">----------</div>
+* */
 
 export class Division{
     private readonly tag: string;
-    private idName: string;
+    private id: string;
+    private attributes: Attributes;
+    private class: string;
+    private styles: any;
+
     private idStyleName: string;
-    private className: string;
+
     private classStyleName: string;
     private innerText: string;
     private inputType: string;
@@ -17,76 +25,81 @@ export class Division{
     private myData: {
         type: any;
     } | undefined
-    private dataId: string;
     private vModel: any;
-    static div():Division{
-        return new Division("div")
+    static createDom(tag:string,attributes:Attributes,styles:any):Division{
+        return new Division(tag,attributes,styles)
     }
-    static img():Division{
-        return new Division('img')
+    static div(attributes:Attributes,styles:any):Division{
+        return new Division("div",attributes,styles)
     }
-    static span():Division{
-        return new Division('span')
-    }
-    static p():Division{
-        return new Division('p')
-    }
-    static h1():Division{
-        return new Division("h1")
-    }
-    static h2():Division{
-        return new Division("h2")
-    }
-    static h3():Division{
-        return new Division("h3")
-    }
-    static h4():Division{
-        return new Division("h4")
-    }
-    static h5():Division{
-        return new Division("h5")
-    }
-    static h6():Division{
-        return new Division("h6")
-    }
-    static input():Division{
-        return new Division('input')
-    }
-    static button():Division{
-        return new Division('button')
-    }
-    static select():Division{
-        return new Division('select')
-    }
+    // static img():Division{
+    //     return new Division('img')
+    // }
+    // static span():Division{
+    //     return new Division('span')
+    // }
+    // static p():Division{
+    //     return new Division('p')
+    // }
+    // static h1():Division{
+    //     return new Division("h1")
+    // }
+    // static h2():Division{
+    //     return new Division("h2")
+    // }
+    // static h3():Division{
+    //     return new Division("h3")
+    // }
+    // static h4():Division{
+    //     return new Division("h4")
+    // }
+    // static h5():Division{
+    //     return new Division("h5")
+    // }
+    // static h6():Division{
+    //     return new Division("h6")
+    // }
+    // static input():Division{
+    //     return new Division('input')
+    // }
+    // static button():Division{
+    //     return new Division('button')
+    // }
+    // static select():Division{
+    //     return new Division('select')
+    // }
     // static tagName = function () {
     //     return new Division(`${Division.tagName.name}`)
     // }
-    static form():Division{
-        return new Division('form')
-    }
-    constructor(tag:string) {
+    // static form():Division{
+    //     return new Division('form')
+    // }
+    constructor(tag:string, attributes:Attributes, styles:any ) {
         console.log(`Constructing tag : ${tag}`)
         this.tag = tag
-        this.idName = ''
-        this.className = ''
+        this.attributes = attributes
+        this.id = attributes.id || uuidv4().split("-")[0]
+        this.class = attributes.class
+        this.innerText = attributes.innerText || ''
+        this.styles = styles || {}
+
         this.idStyleName = ''
         this.classStyleName = ''
-        this.innerText = ''
         this.inputType = ''
         this.inputCount = 0
         this.buttonFunction = ''
         this.margin = ''
         this.basicTagNames = ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
-        this.dataId = uuidv4()
+        // this.dataId = uuidv4()
         this.vModel = ''
     }
     setIdName(idname:string) {
-        this.idName = `id="${idname}"`
+        this.id = idname
         this.idStyleName = idname
         return this
     }
     setClassName(classname:string){
-        this.className = `class="${classname}"`
+        this.class = classname
         this.classStyleName = classname
         return this
     }
@@ -114,36 +127,33 @@ export class Division{
         return this
     }
     generateHTML(){
-        if (this.tag === 'div') {
-            return `<${this.tag} ${this.idName} ${this.className}>${this.innerText}</${this.tag}>\n`
-        }
-        if (this.tag === 'form') {
-            return `<${this.tag}>\n ${this.generateMultipleInput()} </${this.tag}>\n`
-        }
-        if (this.tag === 'input') {
-            return `<${this.tag} ${this.inputType} ${this.buttonFunction}/>\n`
-        }
-        if (this.tag === 'button') {
-            return `<${this.tag} @click="myButtonFunction()"></${this.tag}>\n`
-        }
-        if (this.tag === 'select') {
-            return `<${this.tag}>\n<option></option>\n</${this.tag}>\n`
-        }
-        if (this.tag === 'img') {
-            return `<${this.tag} src="" alt="" />\n`
-        }
-        if (this.basicTagNames.includes(this.tag)) {
-            return `<${this.tag}></${this.tag}>\n`
-        }
+        return `<${this.tag} id=${this.id} ${(this.class && `class="${this.class}"`) || ''}>${this.innerText}</${this.tag}>\n`
+        // if (this.tag === 'form') {
+        //     return `<${this.tag}>\n ${this.generateMultipleInput()} </${this.tag}>\n`
+        // }
+        // if (this.tag === 'input') {
+        //     return `<${this.tag} ${this.inputType} ${this.buttonFunction}/>\n`
+        // }
+        // if (this.tag === 'button') {
+        //     return `<${this.tag} @click="myButtonFunction()"></${this.tag}>\n`
+        // }
+        // if (this.tag === 'select') {
+        //     return `<${this.tag}>\n<option></option>\n</${this.tag}>\n`
+        // }
+        // if (this.tag === 'img') {
+        //     return `<${this.tag} src="" alt="" />\n`
+        // }
+        // if (this.basicTagNames.includes(this.tag)) {
+        //     return `<${this.tag}></${this.tag}>\n`
+        // }
 
     }
     generateStyle() {
-        if (this.idName) {
-            return `#${this.idStyleName} {\n${this.margin}\n}\n`
-        }
-        if (this.className){
-            return `.${this.classStyleName} {\n${this.margin}\n}`
-        }
+        //tag#id.class
+        const cssSelector = `${this.tag}#${this.id}${(this.class && '.' + this.class.split(" ").join(".")) || ''}`
+        const css = Object.keys(this.styles).reduce((accumulator,cssKey)=>accumulator+`${cssKey}:${this.styles[cssKey]};`,'')
+        return `${cssSelector}{\n${css}\n}\n`
+
     }
     generateScripts() {
         if (this.inputType === `type="button"`) {
@@ -179,7 +189,6 @@ export class Division{
         const x  = [
             ${matchedDivision.join(",")}
         ]
-        const compiledVue = \`
         <template>
             <div>
                 \${x.map(s=>s.generateHTML()).join('')}
